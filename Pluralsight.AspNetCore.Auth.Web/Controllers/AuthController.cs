@@ -33,15 +33,23 @@ namespace Pluralsight.AspNetCore.Auth.Web.Controllers
         [HttpPost]
         [Route("signin")]
         [ValidateAntiForgeryToken] // asp.net core adds automatically validate anti forgery token
-        public async Task<IActionResult> SignIn(SignInModel model)
+        public async Task<IActionResult> SignIn(SignInModel model, string returnUrl =null)
         {
             if(ModelState.IsValid)
             {
                 if( await _userService.ValidateCredentials(model.Username, model.Password,out User user))
                 {
                     await SignInUser(user.Username);
+                    if(returnUrl!=null)
+                    {
+                        return Redirect(returnUrl);
+                    }
                     return RedirectToAction("Index", "Home");
-                }                
+                }
+                else
+                {
+                    ModelState.AddModelError("password", "Invalid Credentials");
+                }
             }
             return View(model);
         }
