@@ -17,6 +17,19 @@ namespace Pluralsight.AspNetCore.Auth.Web.Services
                     (BCrypt.Net.BCrypt.HashPassword(user.Value), new User(user.Key)));
             }
         }
+
+        public Task<bool> AddUser(string username, string password)
+        {
+            if (_users.ContainsKey(username.ToLower()))
+                return Task.FromResult(false);
+
+            _users.Add(username.ToLower(),
+                (BCrypt.Net.BCrypt.HashPassword(password), new User(username)));
+
+            return Task.FromResult(true);
+
+        }
+
         public Task<bool> ValidateCredentials(string username, string password, out User user)
         {
             user = null;

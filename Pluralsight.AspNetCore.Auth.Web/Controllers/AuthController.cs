@@ -62,6 +62,30 @@ namespace Pluralsight.AspNetCore.Auth.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Route("signup")]
+        [HttpGet]
+        public IActionResult SignUp()
+        {
+            return View(new SignUpModel());
+        }
+
+        [Route("signup")]
+        [HttpPost]
+        public async Task<IActionResult> SignUp(SignUpModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                if(await _userService.AddUser(model.Username, model.Password))
+                {
+                    await SignInUser(model.Username);
+                    return RedirectToAction("Index", "Home");
+                }
+                ModelState.AddModelError("Error", "Unable to add User. Username aleady used...");
+            }
+            return View(model);
+        }
+
+
         private async Task SignInUser(string username)
         {
             var claims = new List<Claim>

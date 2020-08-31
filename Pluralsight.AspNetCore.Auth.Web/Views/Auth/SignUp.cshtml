@@ -1,0 +1,26 @@
+﻿@model Pluralsight.AspNetCore.Auth.Web.Models.SignUpModel
+
+@if(!ViewContext.ModelState.IsValid)
+{
+    <div class="form-validation" asp-validation-summary="All"></div>
+}
+
+<form class="form-signin" asp-controller="Auth" asp-action="SignUp">
+    <h2>Please Register</h2>
+
+    <label class="sr-only" asp-for="Username"></label>
+    <input type="text" class="form-control" asp-for="Username" placeholder="Username" />
+
+    <label class="sr-only" asp-for="Password"></label>
+    <input type="password" class="form-control" asp-for="Password" placeholder="Password" />
+
+    <label class="sr-only" asp-for="ConfirmPassword"></label>
+    <input type="password" class="form-control" asp-for="ConfirmPassword" placeholder="Repeate Password" />
+
+    <button class="btn btn-lg btn-block btn-primary" type="submit">
+        Register
+    </button>
+
+</form>
+
+
