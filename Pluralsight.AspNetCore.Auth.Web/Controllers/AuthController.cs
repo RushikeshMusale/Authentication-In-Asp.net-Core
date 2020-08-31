@@ -41,9 +41,17 @@ namespace Pluralsight.AspNetCore.Auth.Web.Controllers
                 {
                     await SignInUser(user.Username);
                     return RedirectToAction("Index", "Home");
-                }
+                }                
             }
             return View(model);
+        }
+
+        [HttpPost]
+        [Route("signout")]
+        public async Task<IActionResult> SignOut()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
         }
 
         private async Task SignInUser(string username)
