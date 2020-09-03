@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -23,17 +24,20 @@ namespace Pluralsight.AspNetCore.Auth.Web
             services.AddSingleton<IUserService>(new DummyUserService(users));
 
 
-            // Configuration for cookie authentication
-            services.AddAuthentication(options =>
-            {
+            services.AddAuthentication(options => 
+            {                
+                options.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-                .AddCookie(options =>
+            })                
+                .AddFacebook(options=> 
                 {
-                    options.LoginPath = "/auth/signin";
-                });
+                    options.AppId = "";
+                    options.AppSecret = "";
+                }) // this will only authenticate
+                 .AddCookie(); // so that it can login
+
+
 
         }
 
