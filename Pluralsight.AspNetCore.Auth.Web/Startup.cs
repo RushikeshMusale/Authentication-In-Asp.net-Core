@@ -26,16 +26,25 @@ namespace Pluralsight.AspNetCore.Auth.Web
 
             services.AddAuthentication(options => 
             {                
-                options.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })                
                 .AddFacebook(options=> 
                 {
-                    options.AppId = "";
-                    options.AppSecret = "";
+                    options.AppId = "1";
+                    options.AppSecret = "1";
                 }) // this will only authenticate
-                 .AddCookie(); // so that it can login
+                .AddTwitter(options=> 
+                {
+                    options.ConsumerKey = "1";
+                    options.ConsumerSecret = "1";
+                }) 
+                .AddCookie( options=>
+                {
+                    options.LoginPath = "/authfbtwitter/signinfbtwitter";
+                }
+                ); // so that it can login
 
 
 

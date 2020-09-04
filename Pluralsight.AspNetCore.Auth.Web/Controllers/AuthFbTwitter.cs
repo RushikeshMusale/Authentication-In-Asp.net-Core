@@ -9,17 +9,22 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace Pluralsight.AspNetCore.Auth.Web.Controllers
 {
-    [Route("authfb")]
-    public class AuthFb : Controller
+    [Route("authfbtwitter")]
+    public class AuthFbTwitter : Controller
     {
         // For signing out we can same method from Auth Controller
 
-        [Route("signinfb")]
+        [Route("signinfbtwitter")]
         public IActionResult SignIn()
         {
-            return Challenge(new AuthenticationProperties 
-            { RedirectUri = "/" } // so that once user credentials are validated, it will redirect to root directory of our app
-            ); 
+            return View();
+        }
+
+        [Route("signinfbtwitter/{provider}")]
+        public IActionResult SignIn(string provider, string returnUrl=null)
+        {
+
+            return Challenge(new AuthenticationProperties { RedirectUri = returnUrl ?? "/" }, provider);
         }
     }
 }
