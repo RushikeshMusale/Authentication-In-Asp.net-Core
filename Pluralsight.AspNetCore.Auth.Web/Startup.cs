@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,12 +24,12 @@ namespace Pluralsight.AspNetCore.Auth.Web
 
             services.AddSingleton<IUserService>(new DummyUserService(users));
 
-
+            services.AddSingleton<Services.OAuthServices.IUserService, Services.OAuthServices.DummyUserService>();
             services.AddAuthentication(options => 
             {                
                 options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = "Temporary";
             })                
                 .AddFacebook(options=> 
                 {
@@ -43,11 +44,8 @@ namespace Pluralsight.AspNetCore.Auth.Web
                 .AddCookie( options=>
                 {
                     options.LoginPath = "/authfbtwitter/signinfbtwitter";
-                }
-                ); // so that it can login
-
-
-
+                }). // so that it can login
+                AddCookie("Temporary"); 
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
