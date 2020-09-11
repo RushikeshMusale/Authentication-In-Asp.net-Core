@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Pluralsight.AspNetCore.Auth.Web.Services;
 using System.Collections.Generic;
 
@@ -31,15 +32,24 @@ namespace Pluralsight.AspNetCore.Auth.Web
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = "Temporary";
             })                
+                .AddOpenIdConnect("OpenIDConnect",options=>
+                {
+                    options.Authority = "https://login.microsoftonline.com/psaddemorushi.onmicrosoft.com";                     
+                    options.ClientId = "417f8139-6f30-4b54-9395-e2c5c2b6d154";
+                    options.ResponseType = OpenIdConnectResponseType.IdToken;
+                    options.CallbackPath = "/auth/signin-callback";
+                    options.SignedOutRedirectUri = "https://localhost:44343/";
+                    options.TokenValidationParameters.NameClaimType = "name";
+                })
                 .AddFacebook(options=> 
                 {
-                    options.AppId = "1";
-                    options.AppSecret = "1";
+                    options.AppId = "fb key";
+                    options.AppSecret = "fb secret";                  
                 }) // this will only authenticate
                 .AddTwitter(options=> 
                 {
-                    options.ConsumerKey = "1";
-                    options.ConsumerSecret = "1";
+                    options.ConsumerKey = "twitter key";
+                    options.ConsumerSecret = "twitter secret";
                 }) 
                 .AddCookie( options=>
                 {

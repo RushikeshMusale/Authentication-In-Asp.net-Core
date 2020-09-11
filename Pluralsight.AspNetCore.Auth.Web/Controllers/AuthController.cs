@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
 using Pluralsight.AspNetCore.Auth.Web.Models;
 using Pluralsight.AspNetCore.Auth.Web.Services;
@@ -56,10 +57,12 @@ namespace Pluralsight.AspNetCore.Auth.Web.Controllers
 
         [HttpPost]
         [Route("signout")]
-        public async Task<IActionResult> SignOut()
+        public async Task SignOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
+            await HttpContext.SignOutAsync("OpenIDConnect");
+            //moved this settings to authentication configuration Options.SignedOutRedirectUri
+            //return RedirectToAction("Index", "Home");  
         }
 
         [Route("signup")]
