@@ -39,7 +39,7 @@ namespace Pluralsight.AspNetCore.Auth.Web.Controllers
             var redirectUri = Url.Action("Profile");
             if(returnUrl!=null)
             {
-                redirectUri += "?ReturnUrl" + returnUrl;
+                redirectUri += "?ReturnUrl=" + returnUrl;
             }
             // Tries to authentciate the user with the scheme provided in the overload, here it is the provider
             // if successfully authenticated, it redirects to 'RedirectUri;
