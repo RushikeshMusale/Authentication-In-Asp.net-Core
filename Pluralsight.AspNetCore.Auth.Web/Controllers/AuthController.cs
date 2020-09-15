@@ -57,10 +57,15 @@ namespace Pluralsight.AspNetCore.Auth.Web.Controllers
 
         [HttpPost]
         [Route("signout")]
+
+        // No need to return Task<IActionResult> because, the signoutcallback url takes care of this
         public async Task SignOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignOutAsync("OpenIDConnect");
+
+            // instead of hardcoding B2C_1_sing_up, use the claim tfp to sign out
+            var scheme = User.FindFirst("tfp").Value;
+            await HttpContext.SignOutAsync(scheme);
             //moved this settings to authentication configuration Options.SignedOutRedirectUri
             //return RedirectToAction("Index", "Home");  
         }
