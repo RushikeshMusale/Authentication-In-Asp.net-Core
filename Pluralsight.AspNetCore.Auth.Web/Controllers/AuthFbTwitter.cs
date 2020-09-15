@@ -103,6 +103,12 @@ namespace Pluralsight.AspNetCore.Auth.Web.Controllers
             return View(model);
         }
 
+        [Route("signup")]
+        public IActionResult SignUp()
+        {
+            return Challenge(new AuthenticationProperties { RedirectUri = "/" }, "B2C_1_sign_up");
+        }
+
         private async Task<IActionResult> SignInUser(User user, string returnUrl)
         {
             // signout from Temporary session

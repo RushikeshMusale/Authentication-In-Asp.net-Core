@@ -12,11 +12,15 @@
 
     @if(!User.Identity.IsAuthenticated)
     {
-        <p>
-            <a class="btn btn-lg btn-success" asp-controller="Auth" asp-action="SignUp">
-                SignUp
-            </a>
-        </p>
+<p>
+    <a class="btn btn-lg btn-success" asp-controller="Auth" asp-action="SignUp">
+        SignUp
+    </a>
+
+    <a class="btn btn-lg btn-success" asp-controller="AuthFBTwitter" asp-action="SignUp">
+        SignUp B2C
+    </a>
+</p>
     }
 </div>
 
