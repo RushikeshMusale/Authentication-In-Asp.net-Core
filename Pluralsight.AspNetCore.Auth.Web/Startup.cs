@@ -26,28 +26,36 @@ namespace Pluralsight.AspNetCore.Auth.Web
             services.AddSingleton<IUserService>(new DummyUserService(users));
 
             services.AddSingleton<Services.OAuthServices.IUserService, Services.OAuthServices.DummyUserService>();
-            services.AddAuthentication(options =>
-            {
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            services.AddAuthentication(options => 
+            {                
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-                .AddOpenIdConnect("B2C_1_sign_up", // same as policy name (user flows)
-                options =>
+                options.DefaultSignInScheme = "Temporary";
+            })                
+                .AddOpenIdConnect("OpenIDConnect",options=>
                 {
-                    // This is located in the home-> azure Ad b2c -> user flows -> b2c_1_sign_up -> run user flow
-                    options.MetadataAddress = "https://psadb2cdemorushi.b2clogin.com/psadb2cdemorushi.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1_sign_up";
-                    options.ClientId = "56cec3f2-f27d-4b53-ae7d-263ff7b2a419"; // Application id
-                    options.ResponseType = OpenIdConnectResponseType.IdToken; // this requires to check in the implicit 
-                                                                              //grants inside the azure b2c
-
-                    options.CallbackPath = "/signin/B2C_1_sign_up"; // this should match with reply url in azure ad app.
-                    // rest of things will be taken care by openIdConnect middleware
-                    options.SignedOutCallbackPath = "/signout/B2C_1_sign_up";
-                    options.SignedOutRedirectUri = "/";
-                    options.TokenValidationParameters.NameClaimType = "name"; // so that name is displayed in the home page
+                    options.Authority = "https://login.microsoftonline.com/psaddemorushi.onmicrosoft.com";                     
+                    options.ClientId = "417f8139-6f30-4b54-9395-e2c5c2b6d154";
+                    options.ResponseType = OpenIdConnectResponseType.IdToken;
+                    options.CallbackPath = "/auth/signin-callback";
+                    options.SignedOutRedirectUri = "https://localhost:44343/";
+                    options.TokenValidationParameters.NameClaimType = "name";
                 })
-                .AddCookie();
-
+                .AddFacebook(options=> 
+                {
+                    options.AppId = "fb key";
+                    options.AppSecret = "fb secret";                  
+                }) // this will only authenticate
+                .AddTwitter(options=> 
+                {
+                    options.ConsumerKey = "twitter key";
+                    options.ConsumerSecret = "twitter secret";
+                }) 
+                .AddCookie( options=>
+                {
+                    options.LoginPath = "/authfbtwitter/signinfbtwitter";
+                }). // so that it can login
+                AddCookie("Temporary"); 
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
